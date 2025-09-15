@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>CGPA Calculator</title>
+<style>
+  /* General Reset */
+  * { box-sizing: border-box; margin:0; padding:0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to right, #eef2f3, #ffffff);
+    color: #333;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 1000px;
+    margin: auto;
+    background: #fff;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  }
+
+  h1 {
+    text-align: center;
+    color: #2d6cdf;
+    margin-bottom: 25px;
+    font-size: 2rem;
+  }
+
+  h3 {
+    margin-top: 30px;
+    margin-bottom: 15px;
+    color: #2d6cdf;
+    border-bottom: 2px solid #2d6cdf;
+    padding-bottom: 5px;
+    font-weight: 600;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 12px 10px;
+    text-align: center;
+  }
+
+  th {
+    background: #2d6cdf;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  tr:nth-child(even) {
+    background: #f9f9f9;
+  }
+
+  input[type="text"], input[type="number"], select {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+
+  .buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 15px;
+  }
+
+  button {
+    padding: 10px 20px;
+    font-size: 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+  }
+
+  .calc-btn {
+    background: linear-gradient(to right, #2d6cdf, #1a4db7);
+    color: #fff;
+  }
+
+  .calc-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(45,108,223,0.4);
+  }
+
+  .reset-btn {
+    background: linear-gradient(to right, #e74c3c, #c0392b);
+    color: #fff;
+  }
+
+  .reset-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(231,76,60,0.4);
+  }
+
+  .edit-btn {
+    background: linear-gradient(to right, #27ae60, #1e8449);
+    color: white;
+  }
+
+  .edit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(39,174,96,0.4);
+  }
+
+  .results {
+    margin-top: 25px;
+    padding: 20px;
+    background: #eef4ff;
+    border-left: 6px solid #2d6cdf;
+    border-radius: 10px;
+    font-size: 16px;
+  }
+
+  @media (max-width: 768px) {
+    .buttons { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>CGPA Calculator</h1>
+
+  <!-- Previous Semesters -->
+  <h3>Previous Semesters</h3>
+  <table>
+    <tr>
+      <th>Semester</th>
+      <th>Credits</th>
+      <th>SGPA</th>
+    </tr>
+    <tr>
+      <td>Semester 1</td>
+      <td>23</td>
+      <td><input type="number" id="sgpa1" step="0.01" min="0" max="10" value="9.39"></td>
+    </tr>
+    <tr>
+      <td>Semester 2</td>
+      <td>20</td>
+      <td><input type="number" id="sgpa2" step="0.01" min="0" max="10" value="9.25"></td>
+    </tr>
+  </table>
+
+  <!-- Semester 3 -->
+  <h3>Semester 3</h3>
+  <table id="sem3Table">
+    <tr>
+      <th>Subject</th>
+      <th>Credits</th>
+      <th>Grade</th>
+      <th>Action</th>
+    </tr>
+  </table>
+  <div class="buttons">
+    <button class="edit-btn" onclick="addSubject()">Add Subject</button>
+  </div>
+
+  <!-- Target CGPA -->
+  <h3>Target CGPA</h3>
+  <input type="number" id="targetCgpa" step="0.01" min="0" max="10" placeholder="Enter target CGPA">
+
+  <!-- Buttons -->
+  <div class="buttons">
+    <button class="calc-btn" onclick="calculate()">Calculate</button>
+    <button class="reset-btn" onclick="resetAll()">Reset</button>
+  </div>
+
+  <!-- Results -->
+  <div class="results" id="results"></div>
+</div>
+
+<script>
+  const sem3Subjects = [
+    { name: "Mathematics – III", credits: 4 },
+    { name: "Discrete Mathematics", credits: 4 },
+    { name: "Digital Logic Design", credits: 4 },
+    { name: "Algorithm Design & Analysis – I", credits: 4 },
+    { name: "Object Oriented Programming", credits: 4 },
+    { name: "Digital Logic Design Laboratory", credits: 2 },
+    { name: "Algorithms Design Laboratory", credits: 2 },
+    { name: "Object Oriented Programming Laboratory", credits: 2 }
+  ];
+
+  const sem3Table = document.getElementById('sem3Table');
+
+  function renderSem3() {
+    sem3Table.innerHTML = `
+      <tr>
+        <th>Subject</th>
+        <th>Credits</th>
+        <th>Grade</th>
+        <th>Action</th>
+      </tr>
+    `;
+    sem3Subjects.forEach((sub,index)=>{
+      const row = sem3Table.insertRow();
+      row.innerHTML = `
+        <td><input type="text" value="${sub.name}" onchange="sem3Subjects[${index}].name=this.value"></td>
+        <td><input type="number" value="${sub.credits}" min="0" onchange="sem3Subjects[${index}].credits=parseInt(this.value)"></td>
+        <td>
+          <select>
+            <option value="">--</option>
+            <option value="10">Ex</option>
+            <option value="9">A</option>
+            <option value="8">B</option>
+            <option value="7">C</option>
+            <option value="6">D</option>
+            <option value="5">P</option>
+            <option value="0">F</option>
+          </select>
+        </td>
+        <td><button onclick="removeSubject(${index})" style="background:#e74c3c;color:white;padding:5px 10px;border:none;border-radius:5px;cursor:pointer;">Remove</button></td>
+      `;
+    });
+  }
+
+  function addSubject() {
+    sem3Subjects.push({ name: "New Subject", credits: 4 });
+    renderSem3();
+  }
+
+  function removeSubject(index) {
+    sem3Subjects.splice(index,1);
+    renderSem3();
+  }
+
+  function calculate() {
+    const sgpa1 = parseFloat(document.getElementById('sgpa1').value)||0;
+    const sgpa2 = parseFloat(document.getElementById('sgpa2').value)||0;
+    const sem1Credits=23, sem2Credits=20;
+
+    const tgp1 = sgpa1*sem1Credits;
+    const tgp2 = sgpa2*sem2Credits;
+
+    let sem3Tgp=0, sem3TotalCredits=0;
+    sem3Subjects.forEach((sub,index)=>{
+      const grade = parseFloat(sem3Table.rows[index+1].cells[2].querySelector('select').value);
+      if(!isNaN(grade)){
+        sem3Tgp+=sub.credits*grade;
+        sem3TotalCredits+=sub.credits;
+      }
+    });
+    const sgpa3 = sem3TotalCredits>0?(sem3Tgp/sem3TotalCredits).toFixed(2):0;
+    const totalCredits = sem1Credits+sem2Credits+sem3TotalCredits;
+    const totalTgp = tgp1+tgp2+sem3Tgp;
+    const cgpa = totalCredits>0?(totalTgp/totalCredits).toFixed(2):0;
+
+    const targetCgpa = parseFloat(document.getElementById('targetCgpa').value);
+    let requiredSgpa = '';
+    if(!isNaN(targetCgpa) && sem3TotalCredits>0){
+      const requiredTgp = targetCgpa*totalCredits;
+      const requiredSem3Tgp = requiredTgp-(tgp1+tgp2);
+      requiredSgpa = (requiredSem3Tgp/sem3TotalCredits).toFixed(2);
+    }
+
+    document.getElementById('results').innerHTML = `
+      <p><b>Semester 3 SGPA:</b> ${sgpa3}</p>
+      <p><b>Overall CGPA:</b> ${cgpa}</p>
+      ${requiredSgpa?`<p><b>Required SGPA in Sem 3 for Target CGPA ${targetCgpa}:</b> ${requiredSgpa}</p>`:''}
+    `;
+  }
+
+  function resetAll() {
+    document.getElementById('sgpa1').value='';
+    document.getElementById('sgpa2').value='';
+    document.getElementById('targetCgpa').value='';
+    sem3Subjects.forEach((sub,index)=>{sub.credits=4;});
+    renderSem3();
+    document.querySelectorAll('#sem3Table select').forEach(sel=>sel.value='');
+    document.getElementById('results').innerHTML='';
+  }
+
+  renderSem3();
+</script>
+</body>
+</html>
