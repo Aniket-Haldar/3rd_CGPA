@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CGPA Calculator</title>
-<!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-S7C2SRFERX"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -13,31 +13,28 @@
   gtag('config', 'G-S7C2SRFERX');
 </script>
 <style>
-  /* General Reset */
   * { box-sizing: border-box; margin:0; padding:0; }
   body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(to right, #eef2f3, #ffffff);
+    background: #f4f7f6;
     color: #333;
-    padding: 20px;
+    padding: 10px;
+    -webkit-text-size-adjust: 100%;
   }
-
   .container {
     max-width: 1000px;
     margin: auto;
     background: #fff;
     border-radius: 16px;
-    padding: 30px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    padding: 20px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
   }
-
   h1 {
     text-align: center;
     color: #2d6cdf;
     margin-bottom: 25px;
-    font-size: 2rem;
+    font-size: 1.8rem;
   }
-
   h3 {
     margin-top: 30px;
     margin-bottom: 15px;
@@ -45,39 +42,39 @@
     border-bottom: 2px solid #2d6cdf;
     padding-bottom: 5px;
     font-weight: 600;
+    font-size: 1.2rem;
   }
-
+  .table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
   table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
+    min-width: 500px;
   }
-
   th, td {
     border: 1px solid #ddd;
     padding: 12px 10px;
     text-align: center;
+    vertical-align: middle;
   }
-
   th {
     background: #2d6cdf;
     color: white;
     font-weight: 600;
     font-size: 14px;
   }
-
-  tr:nth-child(even) {
-    background: #f9f9f9;
-  }
-
+  tr:nth-child(even) { background: #f9f9f9; }
   input[type="text"], input[type="number"], select {
     width: 100%;
-    padding: 6px 8px;
+    padding: 8px;
     border: 1px solid #ccc;
     border-radius: 6px;
-    font-size: 14px;
+    font-size: 16px; /* Prevents auto-zoom on iOS */
+    line-height: 1.5;
   }
-
   .buttons {
     display: flex;
     flex-wrap: wrap;
@@ -85,58 +82,41 @@
     gap: 15px;
     margin-top: 15px;
   }
-
   button {
-    padding: 10px 20px;
-    font-size: 14px;
+    padding: 12px 24px;
+    font-size: 1rem;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 600;
+    -webkit-appearance: none;
   }
-
-  .calc-btn {
-    background: linear-gradient(to right, #2d6cdf, #1a4db7);
-    color: #fff;
-  }
-
-  .calc-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(45,108,223,0.4);
-  }
-
-  .reset-btn {
-    background: linear-gradient(to right, #e74c3c, #c0392b);
-    color: #fff;
-  }
-
-  .reset-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(231,76,60,0.4);
-  }
-
-  .edit-btn {
-    background: linear-gradient(to right, #27ae60, #1e8449);
-    color: white;
-  }
-
-  .edit-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(39,174,96,0.4);
-  }
-
+  .calc-btn { background: linear-gradient(to right, #2d6cdf, #1a4db7); color: #fff; }
+  .calc-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(45,108,223,0.4); }
+  .reset-btn { background: linear-gradient(to right, #e74c3c, #c0392b); color: #fff; }
+  .reset-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(231,76,60,0.4); }
+  .edit-btn { background: linear-gradient(to right, #27ae60, #1e8449); color: white; }
+  .edit-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(39,174,96,0.4); }
   .results {
     margin-top: 25px;
     padding: 20px;
     background: #eef4ff;
     border-left: 6px solid #2d6cdf;
     border-radius: 10px;
-    font-size: 16px;
+    font-size: 1rem;
+    word-wrap: break-word;
   }
-
-  @media (max-width: 768px) {
+  @media (max-width: 600px) {
+    body { padding: 5px; }
+    .container { padding: 15px; }
+    h1 { font-size: 1.5rem; }
+    h3 { font-size: 1.1rem; }
     .buttons { flex-direction: column; }
+    button { width: 100%; }
+    table { min-width: 0; }
+    th, td { padding: 8px 5px; font-size: 14px; }
+    input, select { font-size: 16px; }
   }
 </style>
 </head>
@@ -145,66 +125,151 @@
 <div class="container">
   <h1>CGPA Calculator</h1>
 
-  <!-- Previous Semesters -->
-  <h3>Previous Semesters</h3>
-  <table>
-    <tr>
-      <th>Semester</th>
-      <th>Credits</th>
-      <th>SGPA</th>
-    </tr>
-    <tr>
-      <td>Semester 1</td>
-      <td>23</td>
-      <td><input type="number" id="sgpa1" step="0.01" min="0" max="10" value="9.39"></td>
-    </tr>
-    <tr>
-      <td>Semester 2</td>
-      <td>20</td>
-      <td><input type="number" id="sgpa2" step="0.01" min="0" max="10" value="9.25"></td>
-    </tr>
-  </table>
+  <h3>Select Branch to Preload Subjects</h3>
+  <div style="margin-bottom: 20px;">
+    <select id="branchSelector">
+      <option value="">-- Select a Branch --</option>
+      <option value="biotech">Biotechnology</option>
+      <option value="chemical">Chemical Engineering</option>
+      <option value="civil">Civil Engineering</option>
+      <option value="cse">Computer Science Engineering</option>
+      <option value="ee">Electrical Engineering</option>
+      <option value="ece">Electronics & Communication Engineering</option>
+      <option value="mechanical">Mechanical Engineering</option>
+      <option value="meta">Metallurgical & Materials Engineering</option>
+    </select>
+  </div>
 
-  <!-- Semester 3 -->
+  <h3>Previous Semesters</h3>
+  <div class="table-wrapper">
+    <table>
+      <tr>
+        <th>Semester</th>
+        <th>Credits</th>
+        <th>SGPA</th>
+      </tr>
+      <tr>
+        <td>Semester 1</td>
+        <td>23</td>
+        <td><input type="number" id="sgpa1" step="0.01" min="0" max="10" value="0.00"></td>
+      </tr>
+      <tr>
+        <td>Semester 2</td>
+        <td>20</td>
+        <td><input type="number" id="sgpa2" step="0.01" min="0" max="10" value="0.00"></td>
+      </tr>
+    </table>
+  </div>
+
   <h3>Semester 3</h3>
-  <table id="sem3Table">
-    <tr>
-      <th>Subject</th>
-      <th>Credits</th>
-      <th>Grade</th>
-      <th>Action</th>
-    </tr>
-  </table>
+  <div class="table-wrapper">
+    <table id="sem3Table">
+      <tr>
+        <th>Subject</th>
+        <th>Credits</th>
+        <th>Grade</th>
+        <th>Action</th>
+      </tr>
+    </table>
+  </div>
   <div class="buttons">
     <button class="edit-btn" onclick="addSubject()">Add Subject</button>
   </div>
 
-  <!-- Target CGPA -->
   <h3>Target CGPA</h3>
   <input type="number" id="targetCgpa" step="0.01" min="0" max="10" placeholder="Enter target CGPA">
 
-  <!-- Buttons -->
   <div class="buttons">
     <button class="calc-btn" onclick="calculate()">Calculate</button>
     <button class="reset-btn" onclick="resetAll()">Reset</button>
   </div>
 
-  <!-- Results -->
   <div class="results" id="results"></div>
 </div>
 
 <script>
-  const sem3Subjects = [
-    { name: "Mathematics – III", credits: 4 },
-    { name: "Discrete Mathematics", credits: 4 },
-    { name: "Digital Logic Design", credits: 4 },
-    { name: "Algorithm Design & Analysis – I", credits: 4 },
-    { name: "Object Oriented Programming", credits: 4 },
-    { name: "Digital Logic Design Laboratory", credits: 2 },
-    { name: "Algorithms Design Laboratory", credits: 2 },
-    { name: "Object Oriented Programming Laboratory", credits: 2 }
-  ];
+  const branchSubjects = {
+    'cse': [
+      { name: "Algorithm Design & Analysis – I", credits: 4 },
+      { name: "Algorithms Design Laboratory", credits: 2 },
+      { name: "Digital Logic Design", credits: 4 },
+      { name: "Digital Logic Design Laboratory", credits: 2 },
+      { name: "Discrete Mathematics", credits: 4 },
+      { name: "Mathematics – III", credits: 4 },
+      { name: "Object Oriented Programming", credits: 4 },
+      { name: "Object Oriented Programming Laboratory", credits: 2 }
+    ],
+    'mechanical': [
+      { name: "Engineering Thermodynamics", credits: 4 },
+      { name: "Fluid Mechanics", credits: 4 },
+      { name: "Fluid Mechanics Lab", credits: 2 },
+      { name: "Machine Drawing & Solid Modeling", credits: 2 },
+      { name: "Mathematics - III", credits: 4 },
+      { name: "Solid Mechanics", credits: 4 },
+      { name: "Theory of Machines and Mechanisms", credits: 4 },
+      { name: "Workshop Practice-I", credits: 2 }
+    ],
+    'chemical': [
+      { name: "Chemical Engineering Computing Laboratory-I", credits: 1.5 },
+      { name: "Chemical Engineering Thermodynamics", credits: 4.0 },
+      { name: "Chemistry - II", credits: 3.0 },
+      { name: "Chemistry Laboratory-II", credits: 1.5 },
+      { name: "Fluid Mechanics", credits: 4.0 },
+      { name: "Mathematics - III", credits: 4.0 },
+      { name: "Process Calculations", credits: 4.0 }
+    ],
+    'biotech': [
+      { name: "Biochemistry & Enzyme Technology", credits: 4 },
+      { name: "Biochemistry Laboratory", credits: 2 },
+      { name: "Database Management Systems", credits: 3 },
+      { name: "Database Management Systems Laboratory", credits: 2 },
+      { name: "Mathematics III", credits: 4 },
+      { name: "Microbiology & Bioprocess Technology", credits: 4 },
+      { name: "Microbiology Laboratory", credits: 2 },
+      { name: "Process Calculations and Thermodynamics", credits: 3 }
+    ],
+    'civil': [
+      { name: "Civil Engineering Drawing", credits: 2 },
+      { name: "Construction, Material and Concrete Technology", credits: 4 },
+      { name: "Estimation and Costing Sessional", credits: 2 },
+      { name: "Fluid Mechanics", credits: 3 },
+      { name: "Geology for Civil Engineering", credits: 3 },
+      { name: "Mathematics – III", credits: 4 },
+      { name: "Mechanics Laboratory", credits: 2 },
+      { name: "Solid Mechanics", credits: 4 }
+    ],
+    'ece': [
+      { name: "Digital Circuits and Systems", credits: 4 },
+      { name: "Digital Circuits and Systems Laboratory", credits: 2 },
+      { name: "Mathematics - III", credits: 4 },
+      { name: "Network Analysis and Synthesis", credits: 4 },
+      { name: "Network Analysis and Synthesis Laboratory", credits: 2 },
+      { name: "Semiconductor Devices and Technology", credits: 3 },
+      { name: "Semiconductor Devices Laboratory", credits: 2 },
+      { name: "Signals and Systems", credits: 4 }
+    ],
+    'meta': [
+      { name: "Computational Materials Science", credits: 4 },
+      { name: "Computational Materials Science Laboratory", credits: 2 },
+      { name: "Introduction to Metallurgy and Materials", credits: 4 },
+      { name: "Mathematics- III", credits: 4 },
+      { name: "Metallurgical Thermodynamics and Kinetics", credits: 4 },
+      { name: "Metallurgical Thermodynamics and Kinetics Laboratory", credits: 2 },
+      { name: "Mineral Beneficiation Laboratory", credits: 2 },
+      { name: "Non - Ferrous Process Metallurgy", credits: 4 }
+    ],
+    'ee': [
+      { name: "Analog Electronics", credits: 4.0 },
+      { name: "Analog Electronics Laboratory", credits: 2.0 },
+      { name: "Electrical and Electronics Measurements", credits: 4.0 },
+      { name: "Electrical and Electronics Measurements Lab", credits: 2.0 },
+      { name: "Electromagnetic Field Theory", credits: 4.0 },
+      { name: "Mathematics-III", credits: 4.0 },
+      { name: "Network Analysis and Synthesis", credits: 4.0 }
+    ]
+  };
 
+  let sem3Subjects = JSON.parse(JSON.stringify(branchSubjects.cse));
   const sem3Table = document.getElementById('sem3Table');
 
   function renderSem3() {
@@ -216,24 +281,19 @@
         <th>Action</th>
       </tr>
     `;
-    sem3Subjects.forEach((sub,index)=>{
+    sem3Subjects.forEach((sub, index) => {
       const row = sem3Table.insertRow();
       row.innerHTML = `
         <td><input type="text" value="${sub.name}" onchange="sem3Subjects[${index}].name=this.value"></td>
-        <td><input type="number" value="${sub.credits}" min="0" onchange="sem3Subjects[${index}].credits=parseInt(this.value)"></td>
+        <td><input type="number" value="${sub.credits}" step="0.1" min="0" onchange="sem3Subjects[${index}].credits=parseFloat(this.value)"></td>
         <td>
           <select>
-            <option value="">--</option>
-            <option value="10">Ex</option>
-            <option value="9">A</option>
-            <option value="8">B</option>
-            <option value="7">C</option>
-            <option value="6">D</option>
-            <option value="5">P</option>
-            <option value="0">F</option>
+            <option value="">--</option> <option value="10">Ex</option> <option value="9">A</option>
+            <option value="8">B</option> <option value="7">C</option> <option value="6">D</option>
+            <option value="5">P</option> <option value="0">F</option>
           </select>
         </td>
-        <td><button onclick="removeSubject(${index})" style="background:#e74c3c;color:white;padding:5px 10px;border:none;border-radius:5px;cursor:pointer;">Remove</button></td>
+        <td><button onclick="removeSubject(${index})" class="reset-btn" style="padding:5px 10px; border-radius:5px; font-size:14px;">Remove</button></td>
       `;
     });
   }
@@ -244,55 +304,64 @@
   }
 
   function removeSubject(index) {
-    sem3Subjects.splice(index,1);
+    sem3Subjects.splice(index, 1);
     renderSem3();
   }
 
   function calculate() {
-    const sgpa1 = parseFloat(document.getElementById('sgpa1').value)||0;
-    const sgpa2 = parseFloat(document.getElementById('sgpa2').value)||0;
-    const sem1Credits=23, sem2Credits=20;
+    const sgpa1 = parseFloat(document.getElementById('sgpa1').value) || 0;
+    const sgpa2 = parseFloat(document.getElementById('sgpa2').value) || 0;
+    const sem1Credits = 23, sem2Credits = 20;
 
-    const tgp1 = sgpa1*sem1Credits;
-    const tgp2 = sgpa2*sem2Credits;
+    const tgp1 = sgpa1 * sem1Credits;
+    const tgp2 = sgpa2 * sem2Credits;
 
-    let sem3Tgp=0, sem3TotalCredits=0;
-    sem3Subjects.forEach((sub,index)=>{
-      const grade = parseFloat(sem3Table.rows[index+1].cells[2].querySelector('select').value);
-      if(!isNaN(grade)){
-        sem3Tgp+=sub.credits*grade;
-        sem3TotalCredits+=sub.credits;
+    let sem3Tgp = 0, sem3TotalCredits = 0;
+    sem3Subjects.forEach((sub, index) => {
+      const grade = parseFloat(sem3Table.rows[index + 1].cells[2].querySelector('select').value);
+      if (!isNaN(grade)) {
+        const credits = parseFloat(sem3Subjects[index].credits) || 0;
+        sem3Tgp += credits * grade;
+        sem3TotalCredits += credits;
       }
     });
-    const sgpa3 = sem3TotalCredits>0?(sem3Tgp/sem3TotalCredits).toFixed(2):0;
-    const totalCredits = sem1Credits+sem2Credits+sem3TotalCredits;
-    const totalTgp = tgp1+tgp2+sem3Tgp;
-    const cgpa = totalCredits>0?(totalTgp/totalCredits).toFixed(2):0;
+    const sgpa3 = sem3TotalCredits > 0 ? (sem3Tgp / sem3TotalCredits).toFixed(2) : 0;
+    const totalCredits = sem1Credits + sem2Credits + sem3TotalCredits;
+    const totalTgp = tgp1 + tgp2 + sem3Tgp;
+    const cgpa = totalCredits > 0 ? (totalTgp / totalCredits).toFixed(2) : 0;
 
     const targetCgpa = parseFloat(document.getElementById('targetCgpa').value);
     let requiredSgpa = '';
-    if(!isNaN(targetCgpa) && sem3TotalCredits>0){
-      const requiredTgp = targetCgpa*totalCredits;
-      const requiredSem3Tgp = requiredTgp-(tgp1+tgp2);
-      requiredSgpa = (requiredSem3Tgp/sem3TotalCredits).toFixed(2);
+    if (!isNaN(targetCgpa) && sem3TotalCredits > 0) {
+      const requiredTgp = targetCgpa * totalCredits;
+      const requiredSem3Tgp = requiredTgp - (tgp1 + tgp2);
+      requiredSgpa = (requiredSem3Tgp / sem3TotalCredits).toFixed(2);
     }
 
     document.getElementById('results').innerHTML = `
       <p><b>Semester 3 SGPA:</b> ${sgpa3}</p>
       <p><b>Overall CGPA:</b> ${cgpa}</p>
-      ${requiredSgpa?`<p><b>Required SGPA in Sem 3 for Target CGPA ${targetCgpa}:</b> ${requiredSgpa}</p>`:''}
+      ${requiredSgpa ? `<p><b>Required SGPA in Sem 3 for Target CGPA ${targetCgpa}:</b> ${requiredSgpa}</p>` : ''}
     `;
   }
 
   function resetAll() {
-    document.getElementById('sgpa1').value='';
-    document.getElementById('sgpa2').value='';
-    document.getElementById('targetCgpa').value='';
-    sem3Subjects.forEach((sub,index)=>{sub.credits=4;});
+    document.getElementById('sgpa1').value = '';
+    document.getElementById('sgpa2').value = '';
+    document.getElementById('targetCgpa').value = '';
+    document.getElementById('branchSelector').value = '';
+    sem3Subjects = JSON.parse(JSON.stringify(branchSubjects.cse));
     renderSem3();
-    document.querySelectorAll('#sem3Table select').forEach(sel=>sel.value='');
-    document.getElementById('results').innerHTML='';
+    document.getElementById('results').innerHTML = '';
   }
+  
+  document.getElementById('branchSelector').addEventListener('change', function() {
+    const selectedBranch = this.value;
+    if (selectedBranch && branchSubjects[selectedBranch]) {
+      sem3Subjects = JSON.parse(JSON.stringify(branchSubjects[selectedBranch]));
+      renderSem3();
+    }
+  });
 
   renderSem3();
 </script>
